@@ -2,7 +2,9 @@
 ## C graphics programming template with SDL2 OpenGL  
 
 Template project for graphics programming:  
-Use scripts in `scripts` folder to build compile and run.  
+To run:
+* `scripts\bbuild.bat` to build `.sln` & `compile_commands.json`.
+* `scripts\ccompilerun.bat` to compile & run exe.
 
 Dependencies:  
 * vcpkg  
