@@ -12,10 +12,11 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 
-#include <cglm/affine.h>
-#include <cglm/cam.h>
-#include <cglm/mat4.h>
-#include <cglm/vec3.h>
+// #include <cglm/affine.h>
+// #include <cglm/cam.h>
+// #include <cglm/mat4.h>
+// #include <cglm/vec3.h>
+#include <linmath.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
