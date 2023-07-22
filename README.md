@@ -16,8 +16,8 @@ Toolchain:
 
 Dependencies:
 * [SDL2](https://www.libsdl.org/)  
-* [CGLM](https://github.com/recp/cglm)  
 
 Vendored:
 * [GLAD](https://glad.dav1d.de/)  
 * [stb_image](https://github.com/nothings/stb)  
+* [linmath](https://github.com/datenwolf/linmath.h)  
