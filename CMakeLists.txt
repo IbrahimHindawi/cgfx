@@ -14,6 +14,7 @@ include_directories(thirdparty/stb/include)
 include_directories(thirdparty/linmath/include)
 
 find_package(SDL2 CONFIG REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME}
         PRIVATE
         $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
