@@ -11,11 +11,16 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 include_directories(thirdparty/glad/include)
 include_directories(thirdparty/stb/include)
-include_directories(C:/devel/vcpkg/installed/x64-windows/include)
 
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+    )
 
-target_link_libraries(${PROJECT_NAME} C:/devel/vcpkg/installed/x64-windows/lib/SDL2.lib)
-target_link_libraries(${PROJECT_NAME} C:/devel/vcpkg/installed/x64-windows/lib/cglm.lib)
+find_package(cglm CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE cglm::cglm)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
