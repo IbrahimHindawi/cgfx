@@ -5,11 +5,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME}
     source/main.c
     thirdparty/glad/src/glad.c
-    )
+)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+include_directories(source/)
 include_directories(thirdparty/glad/include)
 include_directories(thirdparty/stb/include)
 include_directories(thirdparty/linmath/include)
