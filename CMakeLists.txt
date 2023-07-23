@@ -13,7 +13,7 @@ include_directories(thirdparty/glad/include)
 include_directories(thirdparty/stb/include)
 include_directories(thirdparty/linmath/include)
 
-if (MSVC)
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(SDL2 CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME}
             PRIVATE
@@ -22,13 +22,13 @@ if (MSVC)
     )
 endif()
 
-if(Darwin)
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 endif()
 
-if(Linux)
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} -lm -ldl ${SDL2_LIBRARIES})
