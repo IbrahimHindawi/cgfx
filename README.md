@@ -1,5 +1,4 @@
 # cgfx 
-## Synopsis:  
 C graphics programming template using SDL2 & OpenGL:  
 Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP support.
 
