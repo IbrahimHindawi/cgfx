@@ -20,11 +20,15 @@ if (MSVC)
             $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
             $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
     )
-elseif(Darwin)
+endif()
+
+if(Darwin)
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-elseif(Linux)
+endif()
+
+if(Linux)
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} -lm -ldl ${SDL2_LIBRARIES})
