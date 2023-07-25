@@ -12,16 +12,15 @@ Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP suppor
 
 ### Win64 Run:
 * [Install & Integrate VCPKG](https://learn.microsoft.com/en-us/vcpkg/examples/installing-and-using-packages)
-* Install dependencies through VCPKG. (you might have to edit `scripts\bbuild.bat`)
-* `scripts\bbuild.bat` to build `.sln` & `compile_commands.json`.
+* Install dependencies through VCPKG.
+* `scripts\bbuild.bat` to build `.sln` & `compile_commands.json`. (check DCMAKE_TOOLCHAIN_FILE path)
 * `scripts\ccompilerun.bat` to compile & run exe.
 
 ### Win64 Toolchain:
 * [Visual Studio 2022 & MSBuild](https://visualstudio.microsoft.com/downloads/)
-* [Clang Power Tools for Visual Studio](https://marketplace.visualstudio.com/items?itemName=caphyon.ClangPowerTools)
+* [Clang Power Tools VS Extension](https://marketplace.visualstudio.com/items?itemName=caphyon.ClangPowerTools)
 * [vcpkg](https://github.com/Microsoft/vcpkg/)  
 * [CMake](https://cmake.org/)
-* Python 3.11.2
 
 ### Dependencies:
 * [SDL2](https://www.libsdl.org/)  
