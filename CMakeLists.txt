@@ -16,6 +16,7 @@ include_directories(thirdparty/stb/include)
 include_directories(thirdparty/linmath/include)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set_target_properties(${PROJECT_NAME} PROPERTIES VS_GLOBAL_VcpkgEnabled true)
     find_package(SDL2 CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME}
             PRIVATE
