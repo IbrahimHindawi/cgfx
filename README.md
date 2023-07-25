@@ -17,9 +17,11 @@ Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP suppor
 * `scripts\ccompilerun.bat` to compile & run exe.
 
 ### Win64 Toolchain:
-* [Visual Studio 2022 & MSBuild](https://visualstudio.microsoft.com/downloads/)  
+* [Visual Studio 2022 & MSBuild](https://visualstudio.microsoft.com/downloads/)
+* [Clang Power Tools for Visual Studio](https://marketplace.visualstudio.com/items?itemName=caphyon.ClangPowerTools)
 * [vcpkg](https://github.com/Microsoft/vcpkg/)  
 * [CMake](https://cmake.org/)
+* Python 3.11.2
 
 ### Dependencies:
 * [SDL2](https://www.libsdl.org/)  
@@ -28,7 +30,4 @@ Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP suppor
 * [GLAD](https://glad.dav1d.de/)  
 * [stb_image](https://github.com/nothings/stb)  
 * [linmath](https://github.com/datenwolf/linmath.h)  
-* [Clang Power Tools](https://github.com/Caphyon/clang-power-tools/tree/master/ClangPowerTools/ClangPowerTools/Tooling/v1)
-
-### Known Issues:
-Clang Power Tools does not add vcpkg include dirs, must add manually for now.
+* [Clang Power Tools script](https://github.com/Caphyon/clang-power-tools/tree/master/ClangPowerTools/ClangPowerTools/Tooling/v1)
