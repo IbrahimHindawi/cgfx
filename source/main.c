@@ -18,15 +18,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#define uint8_t u8
-#define uint16_t u16
-#define uint32_t u32
-#define uint64_t u64
-#define int8_t i8
-#define int16_t i16
-#define int32_t i32
-#define int64_t i64
-#define size_t usize
+#include "core.h"
 
 int main(int argc, char *argv[]) {
     /*
