@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(cgfx VERSION 1.0)
+set(ProjectNameParam "DefaultProject" CACHE STRING "Command line argument containing the project name.")
+project(${ProjectNameParam} VERSION 1.0)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME}
     source/main.c
@@ -14,6 +16,9 @@ include_directories(source/)
 include_directories(thirdparty/glad/include)
 include_directories(thirdparty/stb/include)
 include_directories(thirdparty/linmath/include)
+include_directories(extern/haikal/include)
+
+add_subdirectory(extern/haikal)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set_target_properties(${PROJECT_NAME} PROPERTIES VS_GLOBAL_VcpkgEnabled true)
@@ -26,12 +31,14 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
     find_package(SDL2 CONFIG REQUIRED)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} -lm -ldl ${SDL2_LIBRARIES})
