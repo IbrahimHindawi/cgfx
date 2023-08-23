@@ -1,0 +1,3 @@
+[submodule "extern/haikal"]
+	path = extern/haikal
+	url = git@github.com:IbrahimHindawi/haikal.git
