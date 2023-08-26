@@ -20,10 +20,10 @@ SDL_Window *window = NULL;
 char fops_buffer[1024];
 
 float vertices[] = {
-    -0.5f, -0.5f, 0.5f, // 0
-     0.5f, -0.5f, 0.5f, // 1
-    -0.5f,  0.5f, 0.5f, // 2
-     0.5f,  0.5f, 0.5f  // 3
+    -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+     0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+    -0.5f,  0.5f, 0.5f, 0.0f, 1.0f,
+     0.5f,  0.5f, 0.5f, 1.0f, 1.0f
 };  
 
 u32 indices[] = { 
@@ -35,6 +35,7 @@ u32 vao;
 u32 vbo;
 u32 ebo;
 u32 shader_program;
+u32 texture;
 
 void setup() {
     //  SHADER
@@ -52,6 +53,28 @@ void setup() {
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 
+    // TEXTURE
+    //-------------------------------------------
+    // uint32_t texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int32_t width, height, n_channels;
+    uint8_t *data = stbi_load("resource/container.jpg", &width, &height, &n_channels, 0);
+    // uint8_t *data = stbi_load("resource/awesomeface.png", &width, &height, &n_channels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        printf("failed to load texture.");
+    }
+    STBI_FREE(data);
+
     //  GL BUFFERS
     //-------------------------------------------
     glGenVertexArrays(1, &vao);
@@ -66,8 +89,13 @@ void setup() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32), (void*)0);
+    // pos
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void*)0);
     glEnableVertexAttribArray(0);  
+
+    // tex
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void*)(sizeof(f32) * 3));
+    glEnableVertexAttribArray(1);  
 
     glBindVertexArray(0);
 }
@@ -100,13 +128,13 @@ void render() {
     glClearColor(.1f, .1f, .1f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glBindTexture(GL_TEXTURE_2D, texture);
     glUseProgram(shader_program);
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     SDL_GL_SwapWindow(window);
-
 }
 
 int main(int argc, char *argv[]) {
