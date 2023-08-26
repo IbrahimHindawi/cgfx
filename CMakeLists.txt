@@ -10,6 +10,7 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 add_executable(${PROJECT_NAME}
     source/main.c
     source/shader.c
+    source/fileops.c
     thirdparty/glad/src/glad.c
 )
 include_directories(source/)

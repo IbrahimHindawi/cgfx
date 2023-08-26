@@ -1,4 +1,10 @@
+#pragma once
+
+#include <math.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef float f32;
 typedef double f64;
