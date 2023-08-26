@@ -13,12 +13,37 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 
-#include <linmath.h>
+#include <cglm/vec3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include "core.h"
+bool should_quit = false;
+
+void setup() {
+}
+
+void input() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT: {
+                should_quit = true;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+void update() {
+}
+
+void render() {
+}
 
 int main(int argc, char *argv[]) {
     /*
@@ -60,20 +85,11 @@ int main(int argc, char *argv[]) {
     printf("Renderer: %s\n", glGetString(GL_RENDERER));
     printf("Version: %s\n", glGetString(GL_VERSION));
 
-    bool should_quit = false;
+
     while (!should_quit) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT: {
-                    should_quit = true;
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-        }
+        input();
+        update();
+        render();
     }
 
     /* Frees memory */

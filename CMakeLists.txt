@@ -15,10 +15,11 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 include_directories(source/)
 include_directories(thirdparty/glad/include)
 include_directories(thirdparty/stb/include)
-include_directories(thirdparty/linmath/include)
-# include_directories(extern/haikal/include)
 
-add_subdirectory(extern/haikal)
+add_subdirectory(extern)
+
+find_package(cglm CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE cglm::cglm)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set_target_properties(${PROJECT_NAME} PROPERTIES VS_GLOBAL_VcpkgEnabled true)
