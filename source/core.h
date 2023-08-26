@@ -1,9 +1,13 @@
-#define uint8_t u8
-#define uint16_t u16
-#define uint32_t u32
-#define uint64_t u64
-#define int8_t i8
-#define int16_t i16
-#define int32_t i32
-#define int64_t i64
-#define size_t usize
+#include <stdint.h>
+
+typedef float f32;
+typedef double f64;
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
+typedef size_t usize;
