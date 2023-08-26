@@ -25,9 +25,9 @@ Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP suppor
 
 ### Dependencies:
 * [SDL2](https://www.libsdl.org/)  
+* [CGLM](https://github.com/recp/cglm)  
 
 ### Vendored:
 * [GLAD](https://glad.dav1d.de/)  
 * [stb_image](https://github.com/nothings/stb)  
-* [linmath](https://github.com/datenwolf/linmath.h)  
 * [Clang Power Tools script](https://github.com/Caphyon/clang-power-tools/tree/master/ClangPowerTools/ClangPowerTools/Tooling/v1)
