@@ -20,12 +20,20 @@ SDL_Window *window = NULL;
 char fops_buffer[1024];
 
 float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+    -0.5f, -0.5f, 0.5f, // 0
+     0.5f, -0.5f, 0.5f, // 1
+    -0.5f,  0.5f, 0.5f, // 2
+     0.5f,  0.5f, 0.5f  // 3
 };  
+
+u32 indices[] = { 
+    0, 2, 3,
+    3, 1, 0
+};
+
 u32 vao;
 u32 vbo;
+u32 ebo;
 u32 shader_program;
 
 void setup() {
@@ -48,11 +56,15 @@ void setup() {
     //-------------------------------------------
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
 
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32), (void*)0);
     glEnableVertexAttribArray(0);  
@@ -90,7 +102,7 @@ void render() {
 
     glUseProgram(shader_program);
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     SDL_GL_SwapWindow(window);
@@ -151,4 +163,3 @@ int main(int argc, char *argv[]) {
     SDL_Quit(); 
     return 0;
 }
-
