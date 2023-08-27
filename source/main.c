@@ -175,6 +175,17 @@ void update() {
     vec3 camera_new_location;
     glm_vec3_add(camera_position, camera_forward, camera_new_location);
     glm_lookat(camera_position, camera_new_location, camera_up, view);
+
+    // uniforms
+    uint32_t view_location = glGetUniformLocation(shader_program, "view");
+    glUniformMatrix4fv(view_location, 1, GL_FALSE, view[0]);
+    uint32_t proj_location = glGetUniformLocation(shader_program, "proj");
+    glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj[0]);
+    glm_mat4_identity(model);
+    glm_translate(model, (vec3){0.f, 0.f, 0.f});
+    glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
+    uint32_t model_location = glGetUniformLocation(shader_program, "model");
+    glUniformMatrix4fv(model_location, 1, GL_FALSE, model[0]);
 }
 
 void render() {
@@ -182,24 +193,10 @@ void render() {
     // glClearColor(1.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
-
-    // xforms
-    uint32_t view_location = glGetUniformLocation(shader_program, "view");
-    glUniformMatrix4fv(view_location, 1, GL_FALSE, view[0]);
-    uint32_t proj_location = glGetUniformLocation(shader_program, "proj");
-    glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj[0]);
-
     // render
     glBindTexture(GL_TEXTURE_2D, texture);
     glUseProgram(shader_program);
     glBindVertexArray(vao);
-    // uniforms
-    glm_mat4_identity(model);
-    glm_translate(model, (vec3){0.f, 0.f, 0.f});
-    glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
-    uint32_t model_location = glGetUniformLocation(shader_program, "model");
-    glUniformMatrix4fv(model_location, 1, GL_FALSE, model[0]);
-    // draw
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
