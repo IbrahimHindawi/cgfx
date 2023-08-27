@@ -23,10 +23,19 @@
 
 #define sizeofarray(array, type) (sizeof(array) / sizeof(type))
 
+// system
 bool should_quit = false;
 SDL_Window *window = NULL;
 char fops_buffer[1024];
 
+// time
+#define FPS 60
+const int frameTime = 1000 / FPS;
+const float frameTimef32 = 1000.f / FPS;
+int framePrevTime;
+int frameDelay;
+
+// mesh
 i32 indices[] = { 
     #include "models/cubeIndices.h"
 };
@@ -165,10 +174,21 @@ void input() {
 }
 
 void update() {
-    // delta-time
+    // delta time
+    frameDelay = frameTime - (SDL_GetTicks() - framePrevTime);
+    if(frameDelay > 0) {
+        SDL_Delay(frameDelay);
+    }
+    float deltaTime = (SDL_GetTicks() - framePrevTime) / 1000.f;
+    if (deltaTime > frameTime) {
+        deltaTime = frameTimef32;
+    }
+    // printf("ticks: %d, ", SDL_GetTicks());
+    framePrevTime = SDL_GetTicks();
+    // printf("prev: %d, delay: %d\n", framePrevTime, frameDelay);   
 
     // update
-    angle += 0.006f;
+    angle += .01f;
     glm_vec3_dup(camera_position, camera_target);
     glm_vec3_sub(camera_target, (vec3){0.0f, 0.0f, 10.0f}, camera_target);
     // glm_lookat(camera_position, camera_target, camera_up, view);
