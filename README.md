@@ -1,6 +1,5 @@
 # cgfx 
 C graphics programming template using SDL2 & OpenGL:  
-Based on [engine-from-scratch](https://github.com/Falconerd/engine-from-scratch.git).  
 Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP support.
 
 ### Linux & Darwin Run:
