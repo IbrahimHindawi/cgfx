@@ -21,65 +21,18 @@
 #include "shader.h"
 #include "fileops.h"
 
+#define sizeofarray(array, type) (sizeof(array) / sizeof(type))
+
 bool should_quit = false;
 SDL_Window *window = NULL;
 char fops_buffer[1024];
 
-/*
-float vertices[] = {
-    -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-     0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-    -0.5f,  0.5f, 0.5f, 0.0f, 1.0f,
-     0.5f,  0.5f, 0.5f, 1.0f, 1.0f
-};  
-
-u32 indices[] = { 
-    0, 2, 3,
-    3, 1, 0
+i32 indices[] = { 
+    #include "models/cubeIndices.h"
 };
-*/
 
 f32 vertices[] = {
-    -0.5f,  -0.5f,   0.5f,  0.0f,  0.0f,
-     0.5f,  -0.5f,   0.5f,  1.0f,  0.0f,
-    -0.5f,   0.5f,   0.5f,  0.0f,  1.0f,
-     0.5f,   0.5f,   0.5f,  1.0f,  1.0f,
-    -0.5f,   0.5f,   0.5f,  0.0f,  0.0f,
-     0.5f,   0.5f,   0.5f,  1.0f,  0.0f,
-    -0.5f,   0.5f,  -0.5f,  0.0f,  1.0f,
-     0.5f,   0.5f,  -0.5f,  1.0f,  1.0f,
-    -0.5f,   0.5f,  -0.5f,  0.0f,  0.0f,
-     0.5f,   0.5f,  -0.5f,  1.0f,  0.0f,
-    -0.5f,  -0.5f,  -0.5f,  0.0f,  1.0f,
-     0.5f,  -0.5f,  -0.5f,  1.0f,  1.0f,
-    -0.5f,  -0.5f,  -0.5f,  0.0f,  0.0f,
-     0.5f,  -0.5f,  -0.5f,  1.0f,  0.0f,
-    -0.5f,  -0.5f,   0.5f,  0.0f,  1.0f,
-     0.5f,  -0.5f,   0.5f,  1.0f,  1.0f,
-     0.5f,  -0.5f,   0.5f,  0.0f,  0.0f,
-     0.5f,  -0.5f,  -0.5f,  1.0f,  0.0f,
-     0.5f,   0.5f,   0.5f,  0.0f,  1.0f,
-     0.5f,   0.5f,  -0.5f,  1.0f,  1.0f,
-    -0.5f,  -0.5f,  -0.5f,  0.0f,  0.0f,
-    -0.5f,  -0.5f,   0.5f,  1.0f,  0.0f,
-    -0.5f,   0.5f,  -0.5f,  0.0f,  1.0f,
-    -0.5f,   0.5f,   0.5f,  1.0f,  1.0f
-};
-
-
-u32 indices[] = { 
-     0,  2,  3,
-     3,  1,  0,
-     4,  6,  7,
-     7,  5,  4,
-     8, 10, 11,
-    11,  9,  8,
-    12, 14, 15,
-    15, 13, 12,
-    16, 18, 19,
-    19, 17, 16,
-    20, 22, 23,
-    23, 21, 20
+    #include "models/cubeVertices.h"
 };
 
 u32 vao;
@@ -91,6 +44,7 @@ mat4 model;
 mat4 view;
 mat4 proj;
 f32 angle;
+i32 vertex_count;
 
 // camera
 vec3 camera_position = {0};
@@ -101,6 +55,11 @@ vec3 camera_target = {0};
 vec3 camera_direction = {0};
 
 void setup() {
+    //  MESH
+    //-------------------------------------------
+    vertex_count = sizeofarray(indices, i32);
+    printf("Vertex Count = %d", vertex_count);
+
     //  SHADER
     //-------------------------------------------
     fops_read("resource/simple.vert");
@@ -182,7 +141,6 @@ void setup() {
     glm_mat4_identity(view);
     glm_mat4_identity(proj);
     glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, proj );   camera_position[2] = 3.0f;
-
 }
 
 void input() {
@@ -221,6 +179,7 @@ void update() {
 
 void render() {
     glClearColor(.05f, .05f, .05f, 1.f);
+    // glClearColor(1.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
@@ -241,7 +200,8 @@ void render() {
     uint32_t model_location = glGetUniformLocation(shader_program, "model");
     glUniformMatrix4fv(model_location, 1, GL_FALSE, model[0]);
     // draw
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     SDL_GL_SwapWindow(window);
