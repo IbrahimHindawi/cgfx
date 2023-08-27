@@ -38,10 +38,12 @@ int frameDelay;
 // mesh
 i32 indices[] = { 
     #include "models/cubeIndices.h"
+    // #include "models/rubberIndices.h"
 };
 
 f32 vertices[] = {
     #include "models/cubeVertices.h"
+    // #include "models/rubberVertices.h"
 };
 
 u32 vao;
@@ -97,6 +99,7 @@ void setup() {
 
     int32_t width, height, n_channels;
     uint8_t *data = stbi_load("resource/cgfx.png", &width, &height, &n_channels, 0);
+    // uint8_t *data = stbi_load("resource/toylowres.jpg", &width, &height, &n_channels, 0);
     // uint8_t *data = stbi_load("resource/awesomeface.png", &width, &height, &n_channels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
