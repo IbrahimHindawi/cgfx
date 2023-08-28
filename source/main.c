@@ -37,12 +37,12 @@ int frameDelay;
 
 // mesh
 i32 indices[] = { 
-    #include "models/cubeIndices.h"
+    #include "models/cubeIndices.txt"
     // #include "models/rubberIndices.h"
 };
 
 f32 vertices[] = {
-    #include "models/cubeVertices.h"
+    #include "models/cubeVertices.txt"
     // #include "models/rubberVertices.h"
 };
 
