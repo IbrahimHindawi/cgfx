@@ -54,6 +54,7 @@ u32 texture;
 mat4 model;
 mat4 view;
 mat4 proj;
+vec3 pos;
 f32 angle;
 i32 vertex_count;
 
@@ -135,7 +136,7 @@ void setup() {
 
     // XFORMS
     //--------------------------------------------
-    camera_position[2] = 3.0f;
+    camera_position[2] = 10.0f;
     glm_vec3_sub(camera_direction, camera_position, camera_direction);
     glm_vec3_normalize(camera_direction);
 
@@ -152,7 +153,7 @@ void setup() {
     glm_mat4_identity(model);
     glm_mat4_identity(view);
     glm_mat4_identity(proj);
-    glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, proj );   camera_position[2] = 3.0f;
+    glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, proj );   
 }
 
 void input() {
@@ -166,6 +167,18 @@ void input() {
             case SDL_KEYDOWN: {
                 if(event.key.keysym.sym == SDLK_ESCAPE) {
                     should_quit = true;
+                }
+                if(event.key.keysym.sym == SDLK_a) {
+                    pos[0] -= 1.0f;
+                }
+                if(event.key.keysym.sym == SDLK_d) {
+                    pos[0] += 1.0f;
+                }
+                if(event.key.keysym.sym == SDLK_w) {
+                    pos[1] += 1.0f;
+                }
+                if(event.key.keysym.sym == SDLK_s) {
+                    pos[1] -= 1.0f;
                 }
                 break;
             }
@@ -191,39 +204,40 @@ void update() {
     // printf("prev: %d, delay: %d\n", framePrevTime, frameDelay);   
 
     // update
-    angle += .01f;
     glm_vec3_dup(camera_position, camera_target);
-    glm_vec3_sub(camera_target, (vec3){0.0f, 0.0f, 10.0f}, camera_target);
+    glm_vec3_sub(camera_target, (vec3){0.0f, 0.0f, 100.0f}, camera_target);
     // glm_lookat(camera_position, camera_target, camera_up, view);
     vec3 camera_new_location;
     glm_vec3_add(camera_position, camera_forward, camera_new_location);
     glm_lookat(camera_position, camera_new_location, camera_up, view);
+    glm_mat4_identity(model);
+    // glm_translate(model, (vec3){0.f, 0.f, 0.f});
+    glm_translate(model, pos);
+    angle += .01f;
+    glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
+}
 
+void render() {
+    // begin
+    glClearColor(.05f, .05f, .05f, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    // bind
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUseProgram(shader_program);
+    glBindVertexArray(vao);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // uniforms
     uint32_t view_location = glGetUniformLocation(shader_program, "view");
     glUniformMatrix4fv(view_location, 1, GL_FALSE, view[0]);
     uint32_t proj_location = glGetUniformLocation(shader_program, "proj");
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj[0]);
-    glm_mat4_identity(model);
-    glm_translate(model, (vec3){0.f, 0.f, 0.f});
-    glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
     uint32_t model_location = glGetUniformLocation(shader_program, "model");
     glUniformMatrix4fv(model_location, 1, GL_FALSE, model[0]);
-}
-
-void render() {
-    glClearColor(.05f, .05f, .05f, 1.f);
-    // glClearColor(1.f, 0.f, 0.f, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    // render
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glUseProgram(shader_program);
-    glBindVertexArray(vao);
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // draw
     glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-
+    // end
     SDL_GL_SwapWindow(window);
 }
 
