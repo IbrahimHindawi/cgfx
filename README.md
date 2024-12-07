@@ -10,16 +10,15 @@ Compiles to Win64 MacOS Linux with `compile_commands.json` for clangd LSP suppor
 * `./cgfx`
 
 ### Win64 Run:
-* from `x64 Native Tools Command Prompt for VS 2019`
-* [Install & Integrate VCPKG](https://learn.microsoft.com/en-us/vcpkg/examples/installing-and-using-packages)
-* Install dependencies through VCPKG.
-* `scripts\build.bat -b` to build `.sln` & `compile_commands.json`. (check DCMAKE_TOOLCHAIN_FILE path)
-* `scripts\build.bat -cr` to compile & run exe.
+* requires ninja
+* download `SDL2-devel-X.YY.Z-VC.zip` from `https://github.com/libsdl-org/SDL/releases`
+* unzip & add path to CMAKE_PREFIX_PATH environment variable
+* run `x64 Native Tools Command Prompt for VS 20XX`
+* `scripts\build.bat -b` to make `build.ninja` & `compile_commands.json`
+* `scripts\build.bat -cr` to compile & run exe
 
 ### Win64 Toolchain:
 * [Visual Studio 2022 & MSBuild](https://visualstudio.microsoft.com/downloads/)
-* [Clang Power Tools VS Extension](https://marketplace.visualstudio.com/items?itemName=caphyon.ClangPowerTools)
-* [vcpkg](https://github.com/Microsoft/vcpkg/)  
 * [CMake](https://cmake.org/)
 
 ### Dependencies:
