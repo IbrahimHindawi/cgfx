@@ -1,30 +1,30 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(ProjectNameParam "DefaultProject" CACHE STRING "Command line argument containing the project name.")
-project(${ProjectNameParam} VERSION 1.0 LANGUAGES C)
+project(cgfx VERSION 1.0 LANGUAGES C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
+add_subdirectory(extern)
+
 add_executable(${PROJECT_NAME}
     source/main.c
     source/shader.c
     source/fileops.c
-    thirdparty/glad/src/glad.c
+    extern/glad/src/glad.c
 )
 include_directories(source/)
 
-include_directories(thirdparty/glad/include)
-include_directories(thirdparty/stb/include)
-add_subdirectory(extern)
+include_directories(extern/glad/include)
+include_directories(extern/stb/include)
+include_directories(extern/cglm/include)
 
-find_package(cglm CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE cglm::cglm)
+# find_package(cglm CONFIG REQUIRED)
+# target_link_libraries(${PROJECT_NAME} PRIVATE cglm::cglm)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set_target_properties(${PROJECT_NAME} PROPERTIES VS_GLOBAL_VcpkgEnabled true)
-    find_package(SDL2 CONFIG REQUIRED)
+    find_package(SDL2 REQUIRED)
     target_link_libraries(${PROJECT_NAME}
             PRIVATE
             $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>

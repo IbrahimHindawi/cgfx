@@ -1,5 +1,5 @@
-#include "SDL2/SDL_events.h"
-#include "SDL2/SDL_video.h"
+#include <SDL_events.h>
+#include <SDL_video.h>
 #ifdef _MSC_VER
     #define SDL_MAIN_HANDLED
 #endif
@@ -7,7 +7,7 @@
 #include "core.h"
 
 #include <glad/glad.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <cglm/vec3.h>
 #include <cglm/affine.h>
