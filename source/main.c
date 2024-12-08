@@ -15,6 +15,8 @@
 #include <cglm/mat4.h>
 #include <cglm/vec3.h>
 
+#include <time.h>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -22,6 +24,8 @@
 #include "fileops.h"
 
 #define sizeofarray(array, type) (sizeof(array) / sizeof(type))
+
+f32 randomFloat() { return (f32)rand() / (f32)RAND_MAX; }
 
 // system
 bool should_quit = false;
@@ -31,7 +35,7 @@ char fops_buffer[1024];
 // time
 #define FPS 60
 const int frameTime = 1000 / FPS;
-const float frameTimef32 = 1000.f / FPS;
+const f32 frameTimef32 = 1000.f / FPS;
 int framePrevTime;
 int frameDelay;
 
@@ -51,10 +55,17 @@ u32 vbo;
 u32 ebo;
 u32 shader_program;
 u32 texture;
-mat4 model;
+// mat4 model;
+#define N 1024
+mat4 models[N];
 mat4 view;
 mat4 proj;
-vec3 pos;
+// vec3 pos;
+vec3 emitterorigin;
+vec3 positions[N];
+vec3 velocities[N];
+vec3 scales[N];
+f32 speeds[N];
 f32 angle;
 i32 vertex_count;
 
@@ -136,7 +147,7 @@ void setup() {
 
     // XFORMS
     //--------------------------------------------
-    camera_position[2] = 10.0f;
+    camera_position[2] = 30.0f;
     glm_vec3_sub(camera_direction, camera_position, camera_direction);
     glm_vec3_normalize(camera_direction);
 
@@ -150,7 +161,28 @@ void setup() {
     camera_forward[2] = -1.0f;
 
     // mesh
-    glm_mat4_identity(model);
+    for (i32 i = 0; i < N; ++i) {
+        positions[i][0] = 0.f;
+        positions[i][1] = 0.f;
+        positions[i][2] = 0.f;
+    }
+    for (i32 i = 0; i < N; ++i) {
+        velocities[i][0] = randomFloat() - .5f;
+        velocities[i][1] = randomFloat() - .5f;
+        velocities[i][2] = randomFloat() - .5f;
+    }
+    for (i32 i = 0; i < N; ++i) {
+        f32 rand = randomFloat();
+        scales[i][0] = rand + .2f;
+        scales[i][1] = rand + .2f;
+        scales[i][2] = rand + .2f;
+    }
+    for (i32 i = 0; i < N; ++i) {
+        speeds[i] = randomFloat() * 10.f + 10.f;
+    }
+    for (i32 i = 0; i < N; ++i) {
+        glm_mat4_identity(models[i]);
+    }
     glm_mat4_identity(view);
     glm_mat4_identity(proj);
     glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, proj );   
@@ -169,16 +201,16 @@ void input() {
                     should_quit = true;
                 }
                 if(event.key.keysym.sym == SDLK_a) {
-                    pos[0] -= 1.0f;
+                    emitterorigin[0] -= 1.0f;
                 }
                 if(event.key.keysym.sym == SDLK_d) {
-                    pos[0] += 1.0f;
+                    emitterorigin[0] += 1.0f;
                 }
                 if(event.key.keysym.sym == SDLK_w) {
-                    pos[1] += 1.0f;
+                    emitterorigin[1] += 1.0f;
                 }
                 if(event.key.keysym.sym == SDLK_s) {
-                    pos[1] -= 1.0f;
+                    emitterorigin[1] -= 1.0f;
                 }
                 break;
             }
@@ -195,13 +227,18 @@ void update() {
     if(frameDelay > 0) {
         SDL_Delay(frameDelay);
     }
-    float deltaTime = (SDL_GetTicks() - framePrevTime) / 1000.f;
+    f32 deltaTime = (SDL_GetTicks() - framePrevTime) / 1000.f;
     if (deltaTime > frameTime) {
         deltaTime = frameTimef32;
     }
     // printf("ticks: %d, ", SDL_GetTicks());
     framePrevTime = SDL_GetTicks();
     // printf("prev: %d, delay: %d\n", framePrevTime, frameDelay);   
+    for (i32 i = 0; i < N; ++i) {
+        positions[i][0] += velocities[i][0] * speeds[i] * deltaTime;
+        positions[i][1] += velocities[i][1] * speeds[i] * deltaTime;
+        positions[i][2] += velocities[i][2] * speeds[i] * deltaTime;
+    }
 
     // update
     glm_vec3_dup(camera_position, camera_target);
@@ -210,11 +247,22 @@ void update() {
     vec3 camera_new_location;
     glm_vec3_add(camera_position, camera_forward, camera_new_location);
     glm_lookat(camera_position, camera_new_location, camera_up, view);
-    glm_mat4_identity(model);
     // glm_translate(model, (vec3){0.f, 0.f, 0.f});
-    glm_translate(model, pos);
-    angle += .01f;
-    glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
+    for (i32 i = 0; i < N; ++i) {
+        glm_mat4_identity(models[i]);
+        glm_translate(models[i], positions[i]);
+        glm_scale(models[i], scales[i]);
+    }
+    // angle += .01f;
+    // glm_rotate(model, angle, (vec3){1.f, 1.f, 0.f});
+    for (i32 i = 0; i < N; ++i) {
+        f32 dist = glm_vec3_distance(emitterorigin, positions[i]);
+        if (dist > 12.f) {
+            positions[i][0] = emitterorigin[0];
+            positions[i][1] = emitterorigin[1];
+            positions[i][2] = emitterorigin[2];
+        }
+    }
 }
 
 void render() {
@@ -232,16 +280,21 @@ void render() {
     glUniformMatrix4fv(view_location, 1, GL_FALSE, view[0]);
     uint32_t proj_location = glGetUniformLocation(shader_program, "proj");
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj[0]);
-    uint32_t model_location = glGetUniformLocation(shader_program, "model");
-    glUniformMatrix4fv(model_location, 1, GL_FALSE, model[0]);
-    // draw
-    glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+
+    for (i32 i = 0; i < N; ++i) {
+        uint32_t model_location = glGetUniformLocation(shader_program, "model");
+        glUniformMatrix4fv(model_location, 1, GL_FALSE, models[i][0]);
+        glDrawElements(GL_TRIANGLES, vertex_count, GL_UNSIGNED_INT, 0);
+    }
+
     // end
     SDL_GL_SwapWindow(window);
 }
 
 int main(int argc, char *argv[]) {
+    // seed random number generator
+    srand((u32)time(NULL));
+
     /*
      * Initialises the SDL video subsystem (as well as the events subsystem).
      * Returns 0 on success or a negative error code on failure using SDL_GetError().
